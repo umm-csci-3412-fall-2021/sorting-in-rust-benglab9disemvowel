@@ -114,10 +114,10 @@ fn quicksort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
     loop {
         if v[pivot + 1] < v[pivot] {
             v.swap(pivot, pivot + 1);
-            pivot = pivot + 1;
+            pivot += 1;
         } else {
             v.swap(pivot + 1, bigger);
-            bigger = bigger - 1;
+            bigger -= 1;
         }
         if bigger == pivot {
             break;
@@ -199,7 +199,24 @@ fn merge<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(xs: Vec<T>, ys: Ve
 
     // This is totally wrong and will not sort. You should replace it
     // with something useful. :)
-    xs
+    let mut xpos = 0;
+    let mut ypos = 0;
+    let xlen = xs.len();
+    let ylen = ys.len(); // Have to find separately, if sorting odd length
+    let mut output = Vec::<T>::new();
+    
+    loop {
+        if xpos < xlen && (ypos == ylen || xs[xpos] < ys[ypos]) {
+            output.push(xs[xpos]);
+            xpos += 1;    
+        } else if ypos < ylen {
+            output.push(ys[ypos]);
+            ypos += 1;
+        } else { //Both xpos and ypos are past the end
+            break;
+        }
+    }
+    output
 }
 
 fn is_sorted<T: PartialOrd>(slice: &[T]) -> bool {
