@@ -109,7 +109,7 @@ fn quicksort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
     let mut bigger = v.len() - 1;
 
     // Everything in [..pivot] is strictly less than
-    // the pivot. Everything in v[bigger..] is greater
+    // the pivot. Everything in v[bigger+1..] is greater
     // than or equal to the pivot.
     loop {
         if v[pivot + 1] < v[pivot] {
