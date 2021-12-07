@@ -15,17 +15,14 @@ fn main() {
     println!("Elapsed time for insertion sort was {:?}.", before_insertion.elapsed());
 
     let mut w = v.clone();
-    // println!("{:?}", &w);
+
     let before_quicksort = Instant::now();
     quicksort(&mut w);
     println!("Elapsed time for quicksort was {:?}.", before_quicksort.elapsed());
-    // println!("{:?}", &w);
 
     let before_merged = Instant::now();
     let merged_v = merge_sort(&v);
     println!("Elapsed time for merge sort was {:?}.", before_merged.elapsed());
-    // println!("{:?}", v);
-    // println!("{:?}", merged_v);
     println!("Is the original, random list in order?: {:?}", is_sorted(&v));
     println!("Was insertion sort in order?: {:?}", is_sorted(&u));
     println!("Was quicksort in order?: {:?}", is_sorted(&w));
@@ -105,17 +102,32 @@ fn quicksort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
     }
 
     // Now choose a pivot and do the organizing.
-    
-    // ...
+    let mut pivot = 0;
+    let mut bigger = v.len() - 1;
 
-    let smaller = 0; // Totally wrong – you should fix this.
+    // Everything in [..pivot] is strictly less than
+    // the pivot. Everything in v[bigger+1..] is greater
+    // than or equal to the pivot.
+    loop {
+        if v[pivot + 1] < v[pivot] {
+            v.swap(pivot, pivot + 1);
+            pivot += 1;
+        } else {
+            v.swap(pivot + 1, bigger);
+            bigger -= 1;
+        }
+        if bigger == pivot {
+            break;
+        }
+    }
 
     // Sort all the items < pivot
-    quicksort(&mut v[0..smaller]);
+    quicksort(&mut v[0..pivot]);
     // Sort all the items ≥ pivot, *not* including the
     // pivot value itself. If we don't include the +1
     // here you can end up in infinite recursions.
-    quicksort(&mut v[smaller+1..length]);
+    quicksort(&mut v[pivot+1..length]);
+
 }
 
 // Merge sort can't be done "in place", so it needs to return a _new_
@@ -164,10 +176,7 @@ fn merge_sort<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(v: &[T]) -> V
     merge(left, right)
 }
 
-// "Out of the box" there's a warning here about `ys` being
-// unused. Presumably you'll actually use `ys` in your solution,
-// so that warning should go away. You can remove this comment
-// if you wish since it won't be relevant any longer.
+
 fn merge<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(xs: Vec<T>, ys: Vec<T>) -> Vec<T> {
     // This takes two sorted vectors, like:
     //    <5, 8, 9> and
@@ -182,9 +191,24 @@ fn merge<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(xs: Vec<T>, ys: Ve
     // vector, and then push all the remaining elements from the
     // other vector onto the result.
 
-    // This is totally wrong and will not sort. You should replace it
-    // with something useful. :)
-    xs
+    let mut xpos = 0;
+    let mut ypos = 0;
+    let xlen = xs.len();
+    let ylen = ys.len(); // Have to find separately, if sorting odd length
+    let mut output = Vec::<T>::new();
+    
+    loop {
+        if xpos < xlen && (ypos == ylen || xs[xpos] < ys[ypos]) {
+            output.push(xs[xpos]);
+            xpos += 1;    
+        } else if ypos < ylen {
+            output.push(ys[ypos]);
+            ypos += 1;
+        } else { //Both xpos and ypos are past the end
+            break;
+        }
+    }
+    output
 }
 
 fn is_sorted<T: PartialOrd>(slice: &[T]) -> bool {
