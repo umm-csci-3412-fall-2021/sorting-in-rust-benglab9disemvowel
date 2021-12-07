@@ -15,17 +15,14 @@ fn main() {
     println!("Elapsed time for insertion sort was {:?}.", before_insertion.elapsed());
 
     let mut w = v.clone();
-    // println!("{:?}", &w);
+
     let before_quicksort = Instant::now();
     quicksort(&mut w);
     println!("Elapsed time for quicksort was {:?}.", before_quicksort.elapsed());
-    // println!("{:?}", &w);
 
     let before_merged = Instant::now();
     let merged_v = merge_sort(&v);
     println!("Elapsed time for merge sort was {:?}.", before_merged.elapsed());
-    // println!("{:?}", v);
-    // println!("{:?}", merged_v);
     println!("Is the original, random list in order?: {:?}", is_sorted(&v));
     println!("Was insertion sort in order?: {:?}", is_sorted(&u));
     println!("Was quicksort in order?: {:?}", is_sorted(&w));
@@ -179,10 +176,7 @@ fn merge_sort<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(v: &[T]) -> V
     merge(left, right)
 }
 
-// "Out of the box" there's a warning here about `ys` being
-// unused. Presumably you'll actually use `ys` in your solution,
-// so that warning should go away. You can remove this comment
-// if you wish since it won't be relevant any longer.
+
 fn merge<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(xs: Vec<T>, ys: Vec<T>) -> Vec<T> {
     // This takes two sorted vectors, like:
     //    <5, 8, 9> and
@@ -197,8 +191,6 @@ fn merge<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(xs: Vec<T>, ys: Ve
     // vector, and then push all the remaining elements from the
     // other vector onto the result.
 
-    // This is totally wrong and will not sort. You should replace it
-    // with something useful. :)
     let mut xpos = 0;
     let mut ypos = 0;
     let xlen = xs.len();
